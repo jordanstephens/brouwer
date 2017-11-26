@@ -22,3 +22,13 @@ input[type='number'] {
   flex-direction: row;
   justify-content: space-between;
 }
+
+.cell {
+  text-align: center;
+}
+
+.cell label {
+  font-family: serif;
+  font-style: italic;
+  font-weight: bold;
+}
