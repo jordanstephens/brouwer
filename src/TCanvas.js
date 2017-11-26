@@ -5,40 +5,36 @@ import satellite from 'satellite.js';
 
 import './TCanvas.css';
 
-function params2tle(semimajorAxis, inclination, rightAsc, eccentricity, argOfPerigee) {
-  inclination = (0).toFixed(4).padStart(8);
-  rightAsc = (0).toFixed(4).padStart(8);
-  eccentricity = ((0.0004401).toFixed(7) * 10e6).toString().padStart(7, '0');
-  argOfPerigee = (149.7639).toFixed(4).padStart(8);
-  const meanAnomaly = (0.0).toFixed(4).padStart(8);
-  const G = 6.674e-11;
-  const EARTH_MASS = 5.972e+24;
-  const X_DOT_P = 1440.0 / (2.0 * Math.PI); //229.1831180523293
-  const meanMotion = Math.sqrt((EARTH_MASS * G) / Math.pow(2 * semimajorAxis, 3)) / X_DOT_P;
+// universal gravitational constant
+const G = 6.674e-11;
+const EARTH_MASS = 5.972e+24;
+const MU = G * EARTH_MASS;
+const EARTH_RADIUS = 6371;
+
+function params2tle(semimajorAxis, inclination, rightAsc, eccentricity, argOfPerigee, meanAnomaly = 0) {
+  inclination = inclination.toFixed(4).padStart(8);
+  rightAsc = rightAsc.toFixed(4).padStart(8);
+  eccentricity = (eccentricity.toFixed(7) * 10e6).toString().padStart(7, '0');
+  argOfPerigee = argOfPerigee.toFixed(4).padStart(8);
+  meanAnomaly = meanAnomaly.toFixed(4).padStart(8);
+  const _meanMotion = Math.sqrt(MU / Math.pow(2 * semimajorAxis, 3)).toString().slice(0,11);
+  const satNo = '25544';
+  const satClass = 'U';
+  const satYear = '98';
+  const satMonth = '06';
   return `
-    1 25544U 98067A   17328.49210150  .00003614  00000-0  61627-4 0  9993
-    2 25544 ${inclination} ${rightAsc} ${eccentricity} ${argOfPerigee} ${meanAnomaly} ${meanMotion}353383
-  `.split('\n').filter(x => x && x.length).map(s=>s.trim()).join('\n');
+    1 ${satNo}${satClass} ${satYear}${satMonth}7A   17330.48573378  .00003462  00000-0  59297-4 0  9990
+    2 ${satNo} ${inclination} ${rightAsc} ${eccentricity} ${argOfPerigee} ${meanAnomaly} ${_meanMotion} 86996
+  `.split('\n').filter((x) => (x && x.length)).map(s=>s.trim()).join('\n');
 }
-
-window.params2tle = params2tle;
-
-// ISS (ZARYA)
-// const tle = `
-// 1 25544U 98067A   17328.49210150  .00003614  00000-0  61627-4 0  9993
-// 2 25544 ${inclination} ${rightAsc} ${eccentricity} ${argOfPerigee} ${meanAnomaly} ${meanMotion}353383
-// `.split('\n').filter((x) => (x && x.length));
 
 const d0 = moment();
 let t0 = 0;
 
-const tle = params2tle(7000, 0, 0, 0, 0);
-console.log(tle);
-const [tle1, tle2] = tle.split('\n');
+const tle = params2tle(7000, 0, 0, 0, 0).split('\n');
 
 // Initialize a satellite record
 let satrec = satellite.twoline2satrec(tle[0], tle[1]);
-const EARTH_RADIUS = 6371;
 
 class TCanvas extends Component {
   constructor(props) {
