@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import TCanvas from './TCanvas';
+import TCanvasContainer from './TCanvasContainer';
 
 class App extends Component {
   render() {
     return (
       <div className='App'>
-        <TCanvas />
+        <TCanvasContainer />
       </div>
     );
   }

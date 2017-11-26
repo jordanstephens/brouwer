@@ -1,9 +1,9 @@
-.TCanvas {
+.TCanvasContainer {
   margin: 60px auto;
   width: 600px;
 }
 
-.TCanvas svg {
+.TCanvasContainer svg {
   border: 1px solid green;
   width: 600px;
   height: 600px;
@@ -13,7 +13,7 @@ input[type='number'] {
   width: 5em;
 }
 
-.details {
+.details, .controls {
   font-family: monospace;
 }
 

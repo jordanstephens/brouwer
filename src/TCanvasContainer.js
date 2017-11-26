@@ -3,7 +3,7 @@ import ReactAnimationFrame from 'react-animation-frame';
 import moment from 'moment';
 import satellite from 'satellite.js';
 
-import './TCanvas.css';
+import './TCanvasContainer.css';
 
 // universal gravitational constant
 const G = 6.674e-11;
@@ -58,14 +58,81 @@ function errorMessage(code) {
   return ERRORS[code.toString()];
 }
 
-class TCanvas extends Component {
+const TCanvas = ({ windowSize, position, velocity }) => {
+  const vectorScale = windowSize / 100;
+
+  return (
+    <svg viewBox={[windowSize / 2 * -1, windowSize / 2 * -1, windowSize, windowSize].join(' ')}>
+      <line x1={windowSize / 2 * -1} y1='0' x2={windowSize / 2} y2='0'
+        strokeWidth='10' stroke='black' strokeDasharray='500, 200' />
+      <line x1='0' y1={windowSize / 2 * -1} x2='0' y2={windowSize / 2}
+        strokeWidth='10' stroke='black' strokeDasharray='500, 200' />
+      <circle
+        cx={0}
+        cy={0}
+        r={EARTH_RADIUS}
+        fill='lightgrey'
+      />
+      <circle
+        cx={position.x}
+        cy={position.y}
+        r={200}
+        fill={'none'}
+        stroke='green'
+        strokeWidth={'50'}
+      />
+      <line x1={position.x} y1={position.y} x2={position.x + velocity.x * vectorScale} y2={position.y} strokeWidth='10' stroke='blue' />
+      <line x1={position.x} y1={position.y} x2={position.x} y2={position.y + velocity.y * vectorScale} strokeWidth='10' stroke='blue' />
+    </svg>
+  );
+};
+
+const TCanvasDetails = ({ position, velocity }) => {
+  const altitude = magnitude(position) - EARTH_RADIUS;
+  const speed = magnitude(velocity);
+
+  return (
+    <div className='details'>
+      <div className='row'>
+        <div>
+          <strong>r̂</strong>
+          {' '}
+          [{['x', 'y', 'z'].map((k) => {
+            return position[k].toFixed(3);
+          }).join(', ')}]
+        </div>
+        <div>
+          <strong>altitude</strong>
+          {' '}
+          {altitude.toFixed(3)}
+        </div>
+      </div>
+      <div className='row'>
+        <div>
+          <strong>v̂</strong>
+          {' '}
+          [{['x', 'y', 'z'].map((k) => {
+            return velocity[k].toFixed(3);
+          }).join(', ')}]
+        </div>
+        <div>
+          <strong>speed</strong>
+          {' '}
+          {speed.toFixed(3)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+class TCanvasContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       windowSize: 20000.0,
       rate: 1000.0,
 
-      semimajorAxis: 6000,
+      semimajorAxis: 6500,
       inclination: 0.0,
       eccentricity: 0.0,
       rightAsc: 0.0,
@@ -100,6 +167,7 @@ class TCanvas extends Component {
     const date = this.state.d0.add(dt * this.state.rate, 's').toDate();
     const rv = satellite.propagate(this.state.satrec, date);
     const error = this.state.satrec.error;
+    if (error !== 0) console.log(this.state.satrec.error);
     this.setState({ t0, dt, date, rv, error });
   }
 
@@ -120,73 +188,28 @@ class TCanvas extends Component {
   render() {
     const { rv, date } = this.state;
     const { position, velocity } = rv;
-    const vectorScale = this.state.windowSize / 100;
-    const altitude = magnitude(position) - EARTH_RADIUS;
-    const speed = magnitude(velocity);
     const error = this.state.error !== 0 && errorMessage(this.state.error);
 
     return (
-      <div className='TCanvas'>
-        <svg viewBox={[this.state.windowSize / 2 * -1, this.state.windowSize / 2 * -1, this.state.windowSize, this.state.windowSize].join(' ')}>
-          <line x1={this.state.windowSize / 2 * -1} y1='0' x2={this.state.windowSize / 2} y2='0'
-            strokeWidth='10' stroke='black' strokeDasharray='500, 200' />
-          <line x1='0' y1={this.state.windowSize / 2 * -1} x2='0' y2={this.state.windowSize / 2}
-            strokeWidth='10' stroke='black' strokeDasharray='500, 200' />
-          <circle
-            cx={0}
-            cy={0}
-            r={EARTH_RADIUS}
-            fill='lightgrey'
-          />
-          <circle
-            cx={position.x}
-            cy={position.y}
-            r={200}
-            fill={'none'}
-            stroke='green'
-            strokeWidth={'50'}
-          />
-          <line x1={position.x} y1={position.y} x2={position.x + velocity.x * vectorScale} y2={position.y} strokeWidth='10' stroke='blue' />
-          <line x1={position.x} y1={position.y} x2={position.x} y2={position.y + velocity.y * vectorScale} strokeWidth='10' stroke='blue' />
-        </svg>
-        <div className='details'>
-          {this.state.error === 0 ? [
-            (
-              <div className='row'>
-                <div>
-                  <strong>r̂</strong>
-                  {' '}
-                  [{['x', 'y', 'z'].map((k) => {
-                    return position[k].toFixed(3);
-                  }).join(', ')}]
-                </div>
-                <div>
-                  <strong>altitude</strong>
-                  {' '}
-                  {altitude.toFixed(3)}
-                </div>
-              </div>
-            ), (
-              <div className='row'>
-                <div>
-                  <strong>v̂</strong>
-                  {' '}
-                  [{['x', 'y', 'z'].map((k) => {
-                    return velocity[k].toFixed(3);
-                  }).join(', ')}]
-                </div>
-                <div>
-                  <strong>speed</strong>
-                  {' '}
-                  {speed.toFixed(3)}
-                </div>
-              </div>
-            )
-          ] : (
-            <div className='error'>
-              {errorMessage(this.state.error)}
-            </div>
-          )}
+      <div className='TCanvasContainer'>
+        {this.state.error === 0 ? (
+          <div>
+            <TCanvas
+              windowSize={this.state.windowSize}
+              position={position}
+              velocity={velocity}
+            />
+            <TCanvasDetails
+              position={position}
+              velocity={velocity}
+            />
+          </div>
+        ) : (
+          <div className='error'>
+            {errorMessage(this.state.error)}
+          </div>
+        )}
+        <div className='controls'>
           <div className='row'>
             <div className='cell'>
               <div>
@@ -194,7 +217,8 @@ class TCanvas extends Component {
                   type='number'
                   value={this.state.semimajorAxis}
                   onChange={(e) => this.updateOrbitalParam('semimajorAxis', e.target.value)}
-                  step={100}
+                  min={Math.ceil(EARTH_RADIUS / 10) * 10}
+                  step={10}
                 />
                 {' '}
                 km
@@ -208,6 +232,8 @@ class TCanvas extends Component {
                   value={this.state.eccentricity}
                   onChange={(e) => this.updateOrbitalParam('eccentricity', e.target.value)}
                   step={0.001}
+                  min={0}
+                  max={1}
                 />
               </div>
               <label title='Eccentricity'>e</label>
@@ -219,6 +245,8 @@ class TCanvas extends Component {
                   value={this.state.inclination}
                   onChange={(e) => this.updateOrbitalParam('inclination', e.target.value)}
                   step={1}
+                  min={0}
+                  max={360}
                 />
                 {' '}
                 °
@@ -232,6 +260,8 @@ class TCanvas extends Component {
                   value={this.state.rightAsc}
                   onChange={(e) => this.updateOrbitalParam('rightAsc', e.target.value)}
                   step={1}
+                  min={0}
+                  max={360}
                 />
                 {' '}
                 °
@@ -245,6 +275,8 @@ class TCanvas extends Component {
                   value={this.state.argOfPerigee}
                   onChange={(e) => this.updateOrbitalParam('argOfPerigee', e.target.value)}
                   step={1}
+                  min={0}
+                  max={360}
                 />
                 {' '}
                 °
@@ -252,6 +284,8 @@ class TCanvas extends Component {
               <label title='Argument of Periapsis'>ω</label>
             </div>
           </div>
+        </div>
+        <div className='details'>
           <div className='row'>
             <div>
               <strong>Rate</strong>
@@ -260,6 +294,7 @@ class TCanvas extends Component {
                 type='number'
                 value={this.state.rate}
                 onChange={(e) => this.setState({ rate: e.target.value })}
+                step={1}
               />
               {' '}
               ×
@@ -286,4 +321,4 @@ class TCanvas extends Component {
   }
 }
 
-export default ReactAnimationFrame(TCanvas);
+export default ReactAnimationFrame(TCanvasContainer);
