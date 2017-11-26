@@ -5,26 +5,36 @@ import satellite from 'satellite.js';
 
 import './TCanvas.css';
 
-// // ISS (ZARYA)
+function params2tle(semimajorAxis, inclination, rightAsc, eccentricity, argOfPerigee) {
+  inclination = (0).toFixed(4).padStart(8);
+  rightAsc = (0).toFixed(4).padStart(8);
+  eccentricity = ((0.0004401).toFixed(7) * 10e6).toString().padStart(7, '0');
+  argOfPerigee = (149.7639).toFixed(4).padStart(8);
+  const meanAnomaly = (0.0).toFixed(4).padStart(8);
+  const G = 6.674e-11;
+  const EARTH_MASS = 5.972e+24;
+  const X_DOT_P = 1440.0 / (2.0 * Math.PI); //229.1831180523293
+  const meanMotion = Math.sqrt((EARTH_MASS * G) / Math.pow(2 * semimajorAxis, 3)) / X_DOT_P;
+  return `
+    1 25544U 98067A   17328.49210150  .00003614  00000-0  61627-4 0  9993
+    2 25544 ${inclination} ${rightAsc} ${eccentricity} ${argOfPerigee} ${meanAnomaly} ${meanMotion}353383
+  `.split('\n').filter(x => x && x.length).map(s=>s.trim()).join('\n');
+}
+
+window.params2tle = params2tle;
+
+// ISS (ZARYA)
 // const tle = `
 // 1 25544U 98067A   17328.49210150  .00003614  00000-0  61627-4 0  9993
-// 2 25544  51.6410 319.1776 0004401 149.7639 352.1227 15.54219617 86682
+// 2 25544 ${inclination} ${rightAsc} ${eccentricity} ${argOfPerigee} ${meanAnomaly} ${meanMotion}353383
 // `.split('\n').filter((x) => (x && x.length));
-
-// TIANGONG 1
-// const tle = `
-// 1 37820U 11053A   17328.39767988  .00068071  99780-5  19636-3 0  9996
-// 2 37820  42.7547 290.8811 0018225 150.6126 347.4134 15.92513370353383
-// `.split('\n').filter((x) => (x && x.length));
-
-// MOLNIYA 2-9
-const tle = `
-1  7276U 74026A   17328.52702773 +.00000163 +00000-0 -11430-2 0  9997
-2  7276 062.8430 143.3992 6829659 288.3320 012.4975 02.45095615208521
-`.split('\n').filter((x) => (x && x.length));
 
 const d0 = moment();
 let t0 = 0;
+
+const tle = params2tle(7000, 0, 0, 0, 0);
+console.log(tle);
+const [tle1, tle2] = tle.split('\n');
 
 // Initialize a satellite record
 let satrec = satellite.twoline2satrec(tle[0], tle[1]);
