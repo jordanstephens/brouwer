@@ -3,10 +3,15 @@
   width: 600px;
 }
 
-.TCanvasContainer svg {
-  border: 1px solid green;
+.svgContainer {
   width: 600px;
   height: 600px;
+}
+
+.TCanvasContainer svg {
+  border: 1px solid green;
+  width: 100%;
+  height: 100%;
 }
 
 input[type='number'] {
