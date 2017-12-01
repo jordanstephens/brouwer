@@ -105,6 +105,7 @@ function errorMessage(code) {
 const TCanvas = ({ windowSize, position, velocity, semimajorAxis, eccentricity, inclination, rightAsc, argOfPerigee, error }) => {
   const vectorScale = windowSize / 100;
   const semiminorAxis = Math.sqrt(Math.pow(semimajorAxis, 2) * (1 - Math.pow(eccentricity, 2)));
+  const distanceToFoci = semimajorAxis * eccentricity;
 
   return (
     <div className='svgContainer'>
@@ -133,7 +134,7 @@ const TCanvas = ({ windowSize, position, velocity, semimajorAxis, eccentricity, 
             strokeWidth={'50'}
           />
           <ellipse
-            cx='0'
+            cx={-1 * distanceToFoci}
             cy='0'
             rx={semimajorAxis}
             ry={semiminorAxis}
@@ -142,9 +143,9 @@ const TCanvas = ({ windowSize, position, velocity, semimajorAxis, eccentricity, 
             strokeWidth='20'
             style={{
               transform: [
-                `rotate3d(0,1,0,${inclination}deg)`,
-                `rotate3d(1,0,0,${rightAsc}deg)`,
-                `rotate3d(0,0,1,${argOfPerigee}deg)`,
+                `rotate3d(1,0,0,${inclination}deg)`,
+                `rotate3d(0,0,1,${rightAsc}deg)`,
+                `rotate3d(0,1,0,${argOfPerigee}deg)`,
               ].join(' '),
             }}
           />
@@ -198,12 +199,12 @@ class TCanvasContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      windowSize: 20000.0,
+      windowSize: 30000.0,
       rate: 1000.0,
 
-      semimajorAxis: 6500,
+      semimajorAxis: 10000,
       inclination: 0.0,
-      eccentricity: 0.0,
+      eccentricity: 0.3,
       rightAsc: 0.0,
       argOfPerigee: 0.0,
 
