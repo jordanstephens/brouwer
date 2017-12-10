@@ -9,6 +9,7 @@ import Details from './Details';
 
 import {
   XP_DOT_P,
+  MU,
   PARAM_NAMES
 } from './constants';
 
@@ -38,7 +39,7 @@ function newSatRec(params) {
   satrec.ecco = Number(params.eccentricity) || 0;
   satrec.argpo = Number(params.argOfPerigee) || 0;
   satrec.mo = Number(params.meanAnomaly) || 0;
-  satrec.no = Math.sqrt(satrec.whichconst.mu / Math.pow(params.semimajorAxis, 3)) / (2 * Math.PI / 86400) / XP_DOT_P;
+  satrec.no = Math.sqrt(MU / Math.pow(params.semimajorAxis, 3)) / (2 * Math.PI / 86400) / XP_DOT_P;
 
   satrec.inclo = satrec.inclo  * deg2rad;
   satrec.nodeo = satrec.nodeo  * deg2rad;
