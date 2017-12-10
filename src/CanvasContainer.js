@@ -88,6 +88,25 @@ function errorMessage(code) {
   return ERRORS[code.toString()] || 'Error';
 }
 
+function calculatePeriod(semimajorAxis) {
+  return 2 * Math.PI * Math.sqrt(Math.pow(semimajorAxis, 3) / MU);
+}
+
+function propogate(satrec, dt) {
+  const date = INITIAL_DATE.add(dt, 's').toDate(),
+        year = date.getUTCFullYear(),
+        month = date.getUTCMonth() + 1,
+        day = date.getUTCDate(),
+        hours = date.getUTCHours(),
+        minutes = date.getUTCMinutes(),
+        seconds = date.getUTCSeconds();
+  return SGP4.propogate(satrec, year, month, day, hours, minutes, seconds);
+}
+
+const FIRST_PERIOD_ONLY = true;
+
+const INITIAL_DATE = moment();
+
 class CanvasContainer extends Component {
   constructor(props) {
     super(props);
@@ -105,9 +124,7 @@ class CanvasContainer extends Component {
       error: 0,
 
       t0: 0,
-
-      dt: 0,
-      d0: moment(),
+      t_sum: 0,
 
       date: new Date(),
       rv: {
@@ -126,21 +143,30 @@ class CanvasContainer extends Component {
   onAnimationFrame(t) {
     // convert t to seconds
     t = t / 1000.0;
-    const dt = t - this.state.t0;
-    const t0 = t;
-    const date = this.state.d0.add(dt * this.state.rate, 's').toDate();
-    const year = date.getUTCFullYear(),
-          month = date.getUTCMonth(),
-          day = date.getUTCDate(),
-          hours = date.getUTCHours(),
-          minutes = date.getUTCMinutes(),
-          seconds = date.getUTCSeconds();
+    let dt = (t - this.state.t0) * this.state.rate;
+    let t_sum = this.state.t_sum + dt;
 
-    const rv = SGP4.propogate(this.state.satrec, year, month + 1, day, hours, minutes, seconds);
+    const period = calculatePeriod(this.state.semimajorAxis);
+    const progress = period - t_sum;
+
+    if (FIRST_PERIOD_ONLY && progress < 0) {
+      // update dt to be negative such that the orbit cycles back around to the start
+      const overlap = -1 * progress;
+      dt = -1 * period + overlap;
+      t_sum = overlap;
+    }
+
+    const rv = propogate(this.state.satrec, dt);
+
     const error = this.state.satrec.error;
     if (error !== 0) console.log(this.state.satrec.error);
 
-    this.setState({ t0, dt, date, rv, error });
+    this.setState({
+      t0: t,
+      t_sum,
+      rv,
+      error
+    });
   }
 
   stateParams = () => {
