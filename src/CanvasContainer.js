@@ -8,7 +8,6 @@ import ParamForm from './ParamForm';
 import Details from './Details';
 
 import {
-  EARTH_RADIUS,
   XP_DOT_P,
   PARAM_NAMES
 } from './constants';

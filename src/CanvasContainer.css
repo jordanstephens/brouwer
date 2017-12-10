@@ -1,14 +1,13 @@
-.CanvasContainer {
-  margin: 60px auto;
-  width: 600px;
-}
-
+.CanvasContainer { height: 100%; }
 input[type='number'] {
   width: 5em;
 }
 
 .details, .controls {
+  box-sizing: border-box;
   font-family: monospace;
+  height: 80px;
+  padding: 1rem;
 }
 
 .row {

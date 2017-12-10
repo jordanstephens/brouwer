@@ -24,81 +24,79 @@ const ParamForm = ({
 }) => {
 
   return (
-    <div>
-      <div className='controls'>
-        <div className='row'>
-          <div className='cell'>
-            <div>
-              <input
-                type='number'
-                value={semimajorAxis}
-                onChange={(e) => onParamChange(e, 'semimajorAxis', e.target.value)}
-                min={Math.ceil(EARTH_RADIUS / 10) * 10}
-                step={100}
-              />
-              {' '}
-              km
-            </div>
-            <label title='Semi-major Axis'>α</label>
+    <div className='controls'>
+      <div className='row'>
+        <div className='cell'>
+          <div>
+            <input
+              type='number'
+              value={semimajorAxis}
+              onChange={(e) => onParamChange(e, 'semimajorAxis', e.target.value)}
+              min={Math.ceil(EARTH_RADIUS / 10) * 10}
+              step={100}
+            />
+            {' '}
+            km
           </div>
-          <div className='cell'>
-            <div>
-              <input
-                type='number'
-                value={eccentricity}
-                onChange={(e) => onParamChange(e, 'eccentricity', e.target.value)}
-                step={0.001}
-                min={0}
-                max={1}
-              />
-            </div>
-            <label title='Eccentricity'>e</label>
+          <label title='Semi-major Axis'>α</label>
+        </div>
+        <div className='cell'>
+          <div>
+            <input
+              type='number'
+              value={eccentricity}
+              onChange={(e) => onParamChange(e, 'eccentricity', e.target.value)}
+              step={0.001}
+              min={0}
+              max={1}
+            />
           </div>
-          <div className='cell'>
-            <div>
-              <input
-                type='number'
-                value={inclination}
-                onChange={(e) => onParamChange(e, 'inclination', e.target.value)}
-                step={1}
-                min={0}
-                max={360}
-              />
-              {' '}
-              °
-            </div>
-            <label title='Inclination'>i</label>
+          <label title='Eccentricity'>e</label>
+        </div>
+        <div className='cell'>
+          <div>
+            <input
+              type='number'
+              value={inclination}
+              onChange={(e) => onParamChange(e, 'inclination', e.target.value)}
+              step={1}
+              min={0}
+              max={360}
+            />
+            {' '}
+            °
           </div>
-          <div className='cell'>
-            <div>
-              <input
-                type='number'
-                value={rightAsc}
-                onChange={(e) => onParamChange(e, 'rightAsc', e.target.value)}
-                step={1}
-                min={0}
-                max={360}
-              />
-              {' '}
-              °
-            </div>
-            <label title='Right Ascenscion'>Ω</label>
+          <label title='Inclination'>i</label>
+        </div>
+        <div className='cell'>
+          <div>
+            <input
+              type='number'
+              value={rightAsc}
+              onChange={(e) => onParamChange(e, 'rightAsc', e.target.value)}
+              step={1}
+              min={0}
+              max={360}
+            />
+            {' '}
+            °
           </div>
-          <div className='cell'>
-            <div>
-              <input
-                type='number'
-                value={argOfPerigee}
-                onChange={(e) => onParamChange(e, 'argOfPerigee', e.target.value)}
-                step={1}
-                min={0}
-                max={360}
-              />
-              {' '}
-              °
-            </div>
-            <label title='Argument of Periapsis'>ω</label>
+          <label title='Right Ascenscion'>Ω</label>
+        </div>
+        <div className='cell'>
+          <div>
+            <input
+              type='number'
+              value={argOfPerigee}
+              onChange={(e) => onParamChange(e, 'argOfPerigee', e.target.value)}
+              step={1}
+              min={0}
+              max={360}
+            />
+            {' '}
+            °
           </div>
+          <label title='Argument of Periapsis'>ω</label>
         </div>
       </div>
     </div>
