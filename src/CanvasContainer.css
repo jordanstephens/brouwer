@@ -6,7 +6,7 @@ input[type='number'] {
 .details, .controls {
   box-sizing: border-box;
   font-family: monospace;
-  height: 80px;
+  height: 120px;
   padding: 1rem;
 }
 

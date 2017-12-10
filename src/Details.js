@@ -17,10 +17,14 @@ const Details = ({
   inclination,
   rightAsc,
   argOfPerigee,
+  period,
   error
 }) => {
   const altitude = magnitude(position) - EARTH_RADIUS;
   const speed = magnitude(velocity);
+  const distanceToFoci = semimajorAxis * eccentricity;
+  const apogee = semimajorAxis / 2 + distanceToFoci;
+  const perigee = semimajorAxis / 2 - distanceToFoci;
 
   return (
     <div className='details'>
@@ -64,6 +68,20 @@ const Details = ({
             <tr>
               <th>|v|</th>
               <td>{speed.toFixed(3)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+        <div className='row'>
+        <table>
+          <tbody>
+            <tr>
+              <th>apogee <small>km</small></th>
+              <td>{apogee.toFixed(3)}</td>
+              <th>perigee <small>km</small></th>
+              <td>{perigee.toFixed(3)}</td>
+              <th>period <small>s</small></th>
+              <td>{period.toFixed(3)}</td>
             </tr>
           </tbody>
         </table>

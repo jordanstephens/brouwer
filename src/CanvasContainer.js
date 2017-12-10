@@ -219,9 +219,11 @@ class CanvasContainer extends Component {
           <Details
             position={position}
             velocity={velocity}
+            semimajorAxis={semimajorAxis}
+            eccentricity={eccentricity}
+            period={calculatePeriod(semimajorAxis)}
           />
         )}
-
       </div>
     );
   }
