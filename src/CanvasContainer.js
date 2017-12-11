@@ -206,12 +206,9 @@ class CanvasContainer extends Component {
         />
         <AnimationCanvas
           windowSize={windowSize}
-          positionX={position.x}
-          positionY={position.y}
-          positionZ={position.z}
-          velocityX={velocity.x}
-          velocityY={velocity.y}
-          velocityZ={velocity.z}
+          positionX={position && position.x}
+          positionY={position && position.y}
+          positionZ={position && position.z}
           semimajorAxis={semimajorAxis}
           eccentricity={eccentricity}
           inclination={inclination}
@@ -219,21 +216,6 @@ class CanvasContainer extends Component {
           argOfPerigee={argOfPerigee}
           error={error}
         />
-
-        {/* <div className='row'>
-          <div>
-            <strong>Rate</strong>
-            {' '}
-            <input
-              type='number'
-              value={this.state.rate}
-              onChange={(e) => this.setState({ rate: e.target.value })}
-              step={10}
-            />
-            {' '}
-            ×
-          </div>
-        </div> */}
 
         {error ? (
           <div className='error'>
