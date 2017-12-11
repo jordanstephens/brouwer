@@ -9,14 +9,10 @@ function magnitude(vec) {
 }
 
 const Details = ({
-  windowSize,
   position,
   velocity,
   semimajorAxis,
   eccentricity,
-  inclination,
-  rightAsc,
-  argOfPerigee,
   period,
   error
 }) => {
@@ -29,7 +25,7 @@ const Details = ({
   return (
     <div className='details'>
       <div className='row'>
-        <table>
+        <table className='raw'>
           <thead>
             <tr>
               <th></th>
@@ -53,7 +49,7 @@ const Details = ({
             </tr>
           </tbody>
         </table>
-        <table>
+        <table className='magnitudes'>
           <thead>
             <tr>
               <th></th>
@@ -72,16 +68,25 @@ const Details = ({
           </tbody>
         </table>
       </div>
-        <div className='row'>
-        <table>
+      <div className='row'>
+        <table className='derived'>
           <tbody>
             <tr>
-              <th>apogee <small>km</small></th>
-              <td>{apogee.toFixed(3)}</td>
-              <th>perigee <small>km</small></th>
-              <td>{perigee.toFixed(3)}</td>
-              <th>period <small>s</small></th>
-              <td>{period.toFixed(3)}</td>
+              <td>
+                <strong>apogee</strong>
+                {' '}
+                <span>{apogee.toFixed(1)}<small>km</small></span>
+              </td>
+              <td>
+                <strong>perigee</strong>
+                {' '}
+                <span>{perigee.toFixed(1)}<small>km</small></span>
+              </td>
+              <td>
+                <strong>period</strong>
+                {' '}
+                <span>{(period / 60).toFixed(1)}<small>min</small></span>
+              </td>
             </tr>
           </tbody>
         </table>

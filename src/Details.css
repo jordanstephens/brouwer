@@ -1,11 +1,23 @@
 .details {
   background: whitesmoke;
+  font-size: 0.75rem;
 }
 
-table:nth-child(1) { width: 60%; }
-table:nth-child(2) { width: 25%; }
+.raw { width: 60%; }
+.magnitudes { width: 25%; }
+.magnitudes th { width: 48px; }
+.magnitudes td { display: block; width: 80px; }
 
-thead th { text-align: center; }
-table:nth-child(1) tbody th { text-align: left; width: 16%; }
-table:nth-child(1) td { width: 28%; }
-td { text-align: right; }
+thead th { text-align: right; }
+.raw tbody th { text-align: left; width: 16%; }
+.raw td { width: 28%; }
+td { text-align: right; padding: 0.25rem; }
+
+.derived { width: 100%; }
+.derived td {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 33%;
+  white-space: nowrap;
+}
+

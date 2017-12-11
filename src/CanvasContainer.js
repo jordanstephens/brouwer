@@ -16,7 +16,7 @@ import {
 import './CanvasContainer.css';
 
 function newSatRec(params) {
-  var gravconst = SGP4.getgravconst("wgs84");
+  var gravconst = SGP4.getgravconst('wgs84');
   var now = new Date();
   var opsmode = 'i';
   var deg2rad  =  Math.PI / 180.0; //0.0174532925199433
@@ -26,7 +26,7 @@ function newSatRec(params) {
   satrec.whichconst = gravconst;
 
   //Line 1
-  satrec.satnum = "12345"
+  satrec.satnum = '12345';
   satrec.epochyr = parseInt(now.getUTCFullYear().toString().substr(2, 2), 10);
   satrec.epochdays = (now - (new Date(now.getUTCFullYear(), 0, 0))) / (1000 * 60 * 60 * 24);
   satrec.ndot = undefined; // ignoring for now
@@ -49,20 +49,19 @@ function newSatRec(params) {
   satrec.alta = satrec.a*(1.0 + satrec.ecco) - 1.0;
   satrec.altp = satrec.a*(1.0 - satrec.ecco) - 1.0;
 
-  var year = 0;
+  let year = 0;
   if (satrec.epochyr < 57) {
-      year = satrec.epochyr + 2000;
+    year = satrec.epochyr + 2000;
   } else {
-      year = satrec.epochyr + 1900;
+    year = satrec.epochyr + 1900;
   }
 
-  var days2mdhmsResult = SGP4.days2mdhms(year, satrec.epochdays);
-  var mon, day, hr, minute, sec;
-  mon = days2mdhmsResult.mon;
-  day = days2mdhmsResult.day;
-  hr = days2mdhmsResult.hr;
-  minute = days2mdhmsResult.minute;
-  sec = days2mdhmsResult.sec;
+  const days2mdhmsResult = SGP4.days2mdhms(year, satrec.epochdays);
+  const mon = days2mdhmsResult.mon,
+        day = days2mdhmsResult.day,
+        hr = days2mdhmsResult.hr,
+        minute = days2mdhmsResult.minute,
+        sec = days2mdhmsResult.sec;
 
   satrec.jdsatepoch = SGP4.jday(year, mon, day, hr, minute, sec);
 
@@ -72,7 +71,7 @@ function newSatRec(params) {
 }
 
 function invalidVector(vec) {
-  return !(vec && Number(vec.x) === vec.x && Number(vec.y) === vec.y && Number(vec.z) === vec.z)
+  return !(vec && Number(vec.x) === vec.x && Number(vec.y) === vec.y && Number(vec.z) === vec.z);
 }
 
 const ERRORS = {
@@ -136,7 +135,7 @@ class CanvasContainer extends Component {
 
   componentWillMount() {
     const satrec = newSatRec(this.stateParams());
-    const windowSize = this.calculateWindow(this.state.semimajorAxis, this.state.eccentricity)
+    const windowSize = this.calculateWindow(this.state.semimajorAxis, this.state.eccentricity);
     this.setState({ satrec, windowSize });
   }
 
@@ -159,7 +158,7 @@ class CanvasContainer extends Component {
     const rv = propogate(this.state.satrec, dt);
 
     const error = this.state.satrec.error;
-    if (error !== 0) console.log(this.state.satrec.error);
+    if (error !== 0) console.error(this.state.satrec.error);
 
     this.setState({
       t0: t,
@@ -191,15 +190,13 @@ class CanvasContainer extends Component {
   }
 
   render() {
-    const { rv, date, semimajorAxis, eccentricity, inclination, rightAsc, argOfPerigee } = this.state;
+    const { windowSize, rv, semimajorAxis, eccentricity, inclination, rightAsc, argOfPerigee } = this.state;
     const { position, velocity } = rv;
     const error = (this.state.error !== 0 || invalidVector(position) || invalidVector(velocity)) && errorMessage(this.state.error);
 
     return (
       <div className='CanvasContainer'>
         <ParamForm
-          windowSize={this.state.windowSize}
-          rate={this.state.rate}
           semimajorAxis={semimajorAxis}
           eccentricity={eccentricity}
           inclination={inclination}
@@ -208,7 +205,7 @@ class CanvasContainer extends Component {
           onParamChange={(e, key, value) => this.updateOrbitalParam(key, value)}
         />
         <AnimationCanvas
-          windowSize={this.state.windowSize}
+          windowSize={windowSize}
           positionX={position.x}
           positionY={position.y}
           positionZ={position.z}

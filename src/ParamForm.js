@@ -4,103 +4,102 @@ import './ParamForm.css';
 
 import { EARTH_RADIUS } from './constants';
 
+class ParamField extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false,
+    };
+  }
+
+  toggleExpanded = () => {
+    this.setState({ expanded: !this.state.expanded });
+  }
+
+  render() {
+    const { value, units, title, symbol, onChange, ...rest } = this.props;
+    return (
+      <div className='cell'>
+        <label className='value' onClick={this.toggleExpanded}>
+          {value}{units}
+          <span className='symbol' title={title}>{symbol}</span>
+        </label>
+        <div className='expanded' data-expanded={this.state.expanded}>
+          <div className='content'>
+            <input
+              type='range'
+              value={value}
+              onChange={onChange}
+              {...rest}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 const ParamForm = ({
-  windowSize,
-  rate,
-  positionX,
-  positionY,
-  positionZ,
-  velocityX,
-  velocityY,
-  velocityZ,
   semimajorAxis,
   eccentricity,
   inclination,
   rightAsc,
   argOfPerigee,
-  error,
   onParamChange,
-  onControlChange
-}) => {
-
-  return (
-    <div className='controls'>
-      <div className='row'>
-        <div className='cell'>
-          <div>
-            <input
-              type='number'
-              value={semimajorAxis}
-              onChange={(e) => onParamChange(e, 'semimajorAxis', e.target.value)}
-              min={Math.ceil(EARTH_RADIUS / 10) * 10}
-              step={100}
-            />
-            {' '}
-            km
-          </div>
-          <label title='Semi-major Axis'>α</label>
-        </div>
-        <div className='cell'>
-          <div>
-            <input
-              type='number'
-              value={eccentricity}
-              onChange={(e) => onParamChange(e, 'eccentricity', e.target.value)}
-              step={0.001}
-              min={0}
-              max={1}
-            />
-          </div>
-          <label title='Eccentricity'>e</label>
-        </div>
-        <div className='cell'>
-          <div>
-            <input
-              type='number'
-              value={inclination}
-              onChange={(e) => onParamChange(e, 'inclination', e.target.value)}
-              step={1}
-              min={0}
-              max={360}
-            />
-            {' '}
-            °
-          </div>
-          <label title='Inclination'>i</label>
-        </div>
-        <div className='cell'>
-          <div>
-            <input
-              type='number'
-              value={rightAsc}
-              onChange={(e) => onParamChange(e, 'rightAsc', e.target.value)}
-              step={1}
-              min={0}
-              max={360}
-            />
-            {' '}
-            °
-          </div>
-          <label title='Right Ascenscion'>Ω</label>
-        </div>
-        <div className='cell'>
-          <div>
-            <input
-              type='number'
-              value={argOfPerigee}
-              onChange={(e) => onParamChange(e, 'argOfPerigee', e.target.value)}
-              step={1}
-              min={0}
-              max={360}
-            />
-            {' '}
-            °
-          </div>
-          <label title='Argument of Periapsis'>ω</label>
-        </div>
-      </div>
+}) => (
+  <div className='controls'>
+    <div className='row'>
+      <ParamField
+        title={'Semi-major Axis'}
+        symbol={'α'}
+        value={semimajorAxis}
+        units={'km'}
+        onChange={(e) => onParamChange(e, 'semimajorAxis', e.target.value)}
+        min={Math.ceil(EARTH_RADIUS / 10) * 10}
+        max={40000}
+        step={10}
+      />
+      <ParamField
+        title={'Eccentricity'}
+        symbol={'e'}
+        value={eccentricity}
+        onChange={(e) => onParamChange(e, 'eccentricity', e.target.value)}
+        min={0}
+        max={0.999}
+        step={0.001}
+      />
+      <ParamField
+        title={'Inclination'}
+        symbol={'i'}
+        value={inclination}
+        units={'°'}
+        onChange={(e) => onParamChange(e, 'inclination', e.target.value)}
+        min={0}
+        max={180}
+        step={1}
+      />
+      <ParamField
+        title={'Right Ascenscion'}
+        symbol={'Ω'}
+        value={rightAsc}
+        units={'°'}
+        onChange={(e) => onParamChange(e, 'rightAsc', e.target.value)}
+        min={0}
+        max={360}
+        step={1}
+      />
+      <ParamField
+        title={'Argument of Perigee'}
+        symbol={'ω'}
+        value={argOfPerigee}
+        units={'°'}
+        onChange={(e) => onParamChange(e, 'argOfPerigee', e.target.value)}
+        min={0}
+        max={360}
+        step={1}
+      />
     </div>
-  );
-};
+  </div>
+);
 
 export default ParamForm;

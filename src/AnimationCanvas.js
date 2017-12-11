@@ -8,10 +8,6 @@ const AnimationCanvas = ({
   windowSize,
   positionX,
   positionY,
-  positionZ,
-  velocityX,
-  velocityY,
-  velocityZ,
   semimajorAxis,
   eccentricity,
   inclination,
@@ -19,9 +15,9 @@ const AnimationCanvas = ({
   argOfPerigee,
   error
 }) => {
-  // const vectorScale = windowSize / 100;
   const semiminorAxis = Math.sqrt(Math.pow(semimajorAxis, 2) * (1 - Math.pow(eccentricity, 2)));
   const distanceToFoci = semimajorAxis * eccentricity;
+  const scale = 0.01;
 
   return (
     <div className='svgContainer'>
@@ -30,39 +26,37 @@ const AnimationCanvas = ({
           {error}
         </div>
       ) : (
-        <svg viewBox={[windowSize / 2 * -1, windowSize / 2 * -1, windowSize, windowSize].join(' ')}>
+        <svg viewBox={[scale * windowSize / 2 * -1, scale * windowSize / 2 * -1, scale * windowSize, scale * windowSize].join(' ')}>
           <circle
             cx={0}
             cy={0}
-            r={EARTH_RADIUS}
+            r={scale * EARTH_RADIUS}
             fill='lightgrey'
           />
           <g>
             <circle
-              // cx={positionX}
-              // cy={positionY}
               cx='0'
               cy='0'
-              r='200'
+              r={scale * windowSize / 100}
               fill={'none'}
               stroke='green'
-              strokeWidth={'50'}
+              strokeWidth={scale * 50}
               style={{
                 willChange: 'transform',
                 transform: [
-                  `translate3d(${positionX}px, ${positionY}px, 0px)`,
+                  `translate3d(${scale * positionX}px, ${scale * positionY}px, 0px)`,
                 ],
               }}
             />
           </g>
           <ellipse
-            cx={-1 * distanceToFoci}
+            cx={-1 * scale * distanceToFoci}
             cy='0'
-            rx={semimajorAxis}
-            ry={semiminorAxis}
+            rx={scale * semimajorAxis}
+            ry={scale * semiminorAxis}
             fill='none'
             stroke='blue'
-            strokeWidth='20'
+            strokeWidth={scale * 20}
             style={{
               transform: [
                 `rotate3d(0,0,1,${rightAsc}deg)`,
@@ -71,8 +65,6 @@ const AnimationCanvas = ({
               ].join(' '),
             }}
           />
-          {/* <line x1={positionX} y1={positionY} x2={positionX + velocityX * vectorScale} y2={positionY} strokeWidth='10' stroke='blue' />
-          <line x1={positionX} y1={positionY} x2={positionX} y2={positionY + velocityY * vectorScale} strokeWidth='10' stroke='blue' /> */}
         </svg>
       )}
     </div>

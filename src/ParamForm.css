@@ -1,0 +1,49 @@
+.cell {
+  width: 64px;
+}
+.cell .expanded {
+  display: none;
+}
+
+.cell .expanded[data-expanded='true'] {
+  display: block;
+}
+
+.value {
+  cursor: pointer;
+  font-size: 1rem;
+  border-style: dashed;
+  border-width: 0 0 1px 0;
+}
+
+.symbol {
+  font-family: serif;
+  font-style: italic;
+  font-weight: bold;
+  display: block;
+}
+
+.expanded {
+  background-color: #eee;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  height: 200px;
+  width: 32px;
+}
+
+.expanded .content {
+  position: relative;
+  height: 200px;
+  transform: translateX(8px);
+}
+
+input[type='range'] {
+  transform-origin: top left;
+  transform: rotate(90deg) translateY(-50%);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 200px;
+}
